@@ -29,6 +29,7 @@ class Embed(BaseEmbed):
             method = dest.send
         if (
             not hasattr(channel, "permissions_for")
+            or not self.ctx.me
             or channel.permissions_for(self.ctx.me).embed_links
         ):
             return await method(content, embed=self)
