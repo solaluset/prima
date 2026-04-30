@@ -1,11 +1,11 @@
 from typing import Mapping
 
-from discord.ext import commands, pages
+from discord.ext import commands
 from discord.ext.commands import Cog, Command, Group
 
 from modules import embed
 from modules.i18n import t
-from modules.utils import chunks
+from modules.utils import Paginator, chunks
 
 
 class Help(commands.DefaultHelpCommand):
@@ -48,9 +48,7 @@ class Help(commands.DefaultHelpCommand):
                     inline=False,
                 )
             help_pages.append(em)
-        await pages.Paginator(pages=help_pages).send(
-            self.context, self.get_destination()
-        )
+        await Paginator(pages=help_pages).send(self.context, self.get_destination())
 
     async def send_group_help(self, group: Group):
         em = self.get_command_embed(group)

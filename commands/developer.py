@@ -4,9 +4,8 @@ from textwrap import TextWrapper
 import discord
 from discord import Activity, ActivityType, Status
 from discord.ext import commands
-from discord.ext.pages import Paginator
 
-from modules.utils import execute
+from modules.utils import Paginator, execute
 from modules.i18n import t
 
 
