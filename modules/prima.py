@@ -234,7 +234,7 @@ class PrimaBot(commands.Bot):
         count = len(
             await asyncio.gather(
                 *(
-                    super().load_extension("." + name, package=package)
+                    self.load_extension("." + name, package=package)
                     for name, package in self._extensions
                 )
             )
