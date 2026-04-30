@@ -26,7 +26,7 @@ bot = PrimaBot(
 )
 
 
-bot.load_extensions(
+bot.add_extensions(
     "alias",
     "autorole",
     "ban",

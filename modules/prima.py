@@ -1,6 +1,7 @@
 import os
 import ast
 import json
+import asyncio
 import logging as log
 from pydoc import render_doc
 from typing import Iterable
@@ -110,6 +111,7 @@ class PrimaBot(commands.Bot):
         if self.test_mode:
             log.info("Running in test mode.")
         self.load_config()
+        self._extensions = []
 
         self.test_channel_id = self.config["test_channel_id"]
         self.sql = (
@@ -223,16 +225,26 @@ class PrimaBot(commands.Bot):
             return super().run(token)
         log.fatal("Please enter the token in %s", CONFIG_FILE)
 
-    async def start(self, token):
+    async def start(self, token, **kwargs):
         self.session = aiohttp.ClientSession()
 
         async with self.sql.begin() as conn:
             await conn.run_sync(metadata.create_all)
 
+        count = len(
+            await asyncio.gather(
+                *(
+                    super().load_extension("." + name, package=package)
+                    for name, package in self._extensions
+                )
+            )
+        )
+        log.info(f"{count} extensions loaded.")
+
         if self.test_mode:
             start_console(self)
 
-        await super().start(token)
+        await super().start(token, **kwargs)
 
     async def close(self):
         await self.session.close()
@@ -302,14 +314,8 @@ class PrimaBot(commands.Bot):
         with open(CONFIG_FILE, "w") as f:
             json.dump(self.config, f, indent=4)
 
-    def load_extensions(self, *names: str, package: str):
-        "Loads extensions from package."
-        count = len(
-            super().load_extensions(
-                *["." + i for i in names], package=package, store=False
-            )
-        )
-        log.info(f"{count} extensions loaded.")
+    def add_extensions(self, *names: str, package: str):
+        self._extensions.extend((name, package) for name in names)
 
 
 class PrimaContext(commands.Context):
