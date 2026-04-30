@@ -46,6 +46,6 @@ async def kick(ctx, user: discord.Member, *, reason: str | None = None):
     await ctx.send(t("kick.user_kicked", ctx.language, user=escape_markdown(str(user))))
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_command(ban)
     bot.add_command(kick)

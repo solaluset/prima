@@ -110,5 +110,5 @@ class Help(commands.DefaultHelpCommand):
         return string[::-1].replace(old[::-1], new[::-1], count)[::-1]
 
 
-def setup(bot):
+async def setup(bot):
     bot.help_command = Help()

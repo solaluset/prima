@@ -26,5 +26,5 @@ async def language(ctx, lang: str | None = None):
     await ctx.send(t("language.switched", lang))
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_command(language)

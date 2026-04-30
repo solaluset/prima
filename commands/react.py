@@ -26,5 +26,5 @@ async def react(
     await message.add_reaction(reaction)
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_command(react)

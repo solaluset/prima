@@ -225,5 +225,5 @@ class Remind(commands.Cog):
         return await user.create_dm()
 
 
-def setup(bot):
-    bot.add_cog(Remind(bot))
+async def setup(bot):
+    await bot.add_cog(Remind(bot))

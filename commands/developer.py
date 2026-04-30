@@ -132,5 +132,5 @@ class DeveloperUtils(commands.Cog):
         await ctx.send(t("status.changed", ctx.language))
 
 
-def setup(bot):
-    bot.add_cog(DeveloperUtils())
+async def setup(bot):
+    await bot.add_cog(DeveloperUtils())

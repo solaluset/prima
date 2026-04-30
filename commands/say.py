@@ -7,5 +7,5 @@ async def say(ctx, *, text: str):
     await ctx.send(text)
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_command(say)

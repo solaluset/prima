@@ -73,6 +73,6 @@ async def layout_message(ctx, message: discord.Message):
     await em.send(ephemeral=True)
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_command(layout)
     bot.add_application_command(layout_message)

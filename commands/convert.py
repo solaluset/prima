@@ -38,5 +38,5 @@ async def convert(ctx, num: str, from_sys: int, to_sys: int):
     await em.send()
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_command(convert)

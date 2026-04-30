@@ -211,5 +211,5 @@ class ReactionRole(commands.Cog):
                     await self.data.delete(role_id=r)
 
 
-def setup(bot):
-    bot.add_cog(ReactionRole(bot))
+async def setup(bot):
+    await bot.add_cog(ReactionRole(bot))

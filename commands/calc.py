@@ -28,5 +28,5 @@ async def calc(ctx, *, expr: str):
     await em.send()
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_command(calc)
