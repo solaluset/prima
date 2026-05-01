@@ -9,7 +9,7 @@ from discord.app_commands import Translator as BaseTranslator
 LOCALES_PATH = "./locales"
 # map our locales to Discord locales
 LOCALES = {
-    "uk": ["uk"],
+    "uk": ["uk-UA"],
     "en": ["en-GB", "en-US"],
 }
 LOCALES_INVERTED = {k: v for v, ks in LOCALES.items() for k in ks}
@@ -54,4 +54,4 @@ def plural_en(singular: str, plural: str, /, *, count: int, **kwargs) -> str:
 
 class Translator(BaseTranslator):
     async def translate(self, string, locale, context):
-        return t(string.message, LOCALES_INVERTED.get(locale))
+        return t(string.message, LOCALES_INVERTED.get(locale.language_code))
