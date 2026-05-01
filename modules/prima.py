@@ -22,7 +22,7 @@ from sqlalchemy.ext.asyncio import create_async_engine
 
 from . import regexps
 from .db import WrappedTable, metadata
-from .i18n import t
+from .i18n import Translator, t
 from .converters import RoleTooHighForUser, RoleTooHighForBot, NotSameGuild
 
 CONFIG_FILE = "config.json"
@@ -225,7 +225,9 @@ class PrimaBot(commands.Bot):
             return super().run(token)
         log.fatal("Please enter the token in %s", CONFIG_FILE)
 
-    async def start(self, token, **kwargs):
+    async def setup_hook(self):
+        await super().setup_hook()
+
         self.session = aiohttp.ClientSession()
 
         async with self.sql.begin() as conn:
@@ -241,6 +243,10 @@ class PrimaBot(commands.Bot):
         )
         log.info(f"{count} extensions loaded.")
 
+        await self.tree.set_translator(Translator())
+        await self.tree.sync()
+
+    async def start(self, token, **kwargs):
         if self.test_mode:
             start_console(self)
 

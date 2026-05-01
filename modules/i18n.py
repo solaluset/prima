@@ -1,13 +1,18 @@
-__all__ = ("AVAILABLE_LANGUAGES", "init", "t", "generate_name_localizations")
+__all__ = ("LOCALES", "init", "t")
 
-import os
 import logging as log
 
 import i18n
 from i18n import t
+from discord.app_commands import Translator as BaseTranslator
 
 LOCALES_PATH = "./locales"
-AVAILABLE_LANGUAGES = [i.rpartition(".")[0] for i in os.listdir(LOCALES_PATH)]
+# map our locales to Discord locales
+LOCALES = {
+    "uk": ["uk"],
+    "en": ["en-GB", "en-US"],
+}
+LOCALES_INVERTED = {k: v for v, ks in LOCALES.items() for k in ks}
 
 
 def init():
@@ -19,6 +24,8 @@ def init():
 
     i18n.add_function("p", plural_uk, "uk")
     i18n.add_function("p", plural_en, "en")
+
+    i18n.load_everything(lock=True)
 
 
 def handle_missing_translation(key, locale, **_):
@@ -45,8 +52,6 @@ def plural_en(singular: str, plural: str, /, *, count: int, **kwargs) -> str:
         return plural
 
 
-def generate_name_localizations(key: str) -> dict[str, str]:
-    localizations = {locale: t(key, locale) for locale in AVAILABLE_LANGUAGES}
-    localizations["en-GB"] = localizations["en-US"] = localizations.pop("en")
-
-    return localizations
+class Translator(BaseTranslator):
+    async def translate(self, string, locale, context):
+        return t(string.message, LOCALES_INVERTED.get(locale))
