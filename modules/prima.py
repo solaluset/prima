@@ -230,9 +230,6 @@ class PrimaBot(commands.Bot):
 
         self.session = aiohttp.ClientSession()
 
-        async with self.sql.begin() as conn:
-            await conn.run_sync(metadata.create_all)
-
         count = len(
             await asyncio.gather(
                 *(
@@ -242,6 +239,9 @@ class PrimaBot(commands.Bot):
             )
         )
         log.info(f"{count} extensions loaded.")
+
+        async with self.sql.begin() as conn:
+            await conn.run_sync(metadata.create_all)
 
         await self.tree.set_translator(Translator())
         await self.tree.sync()

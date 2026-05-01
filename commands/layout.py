@@ -54,20 +54,18 @@ async def layout(ctx, *, text: str | None = None):
     name=locale_str("layout.title"),
 )
 async def layout_message(ctx, message: discord.Message):
+    language = await ctx.client.get_language(ctx.guild)
     try:
         text = await _text_from_message(message)
     except discord.NotFound:
-        return await ctx.respond(
-            t("errors.not_found.message", ctx.language), ephemeral=True
-        )
+        return await ctx.respond(t("errors.not_found.message", language), ephemeral=True)
     if not text:
-        return await ctx.respond(t("layout.missing_text", ctx.language), ephemeral=True)
-    em = embed.Embed(
-        ctx,
-        title=t("layout.title", ctx.language),
+        return await ctx.respond(t("layout.missing_text", language), ephemeral=True)
+    em = discord.Embed(
+        title=t("layout.title", language),
         description=text.translate(TR),
     )
-    await em.send(ephemeral=True)
+    await ctx.response.send_message(embed=em, ephemeral=True)
 
 
 async def setup(bot):
