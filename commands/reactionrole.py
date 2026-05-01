@@ -2,13 +2,13 @@ import logging as log
 
 import discord
 from discord import Message, PartialEmoji, RawReactionActionEvent
-from discord.ext import commands, pages
+from discord.ext import commands
 from sqlalchemy import Column, String
 
 from modules import regexps, embed
 from modules.i18n import t
 from modules.db import WrappedTable
-from modules.utils import chunks
+from modules.utils import Paginator, chunks
 from modules.converters import ReactionConverter, ManageableRole, SameGuildMessage
 from modules.prima import (
     HTTP_INVALID_FORM_BODY,
@@ -129,7 +129,7 @@ class ReactionRole(commands.Cog):
                 )
             )
         if list_pages:
-            await pages.Paginator(list_pages).send(ctx)
+            await Paginator(list_pages).send(ctx)
         else:
             await embed.Embed(
                 ctx, title=t("reactionrole.list.empty", ctx.language)
