@@ -150,5 +150,5 @@ class Aliases(commands.Cog):
         return None
 
 
-def setup(bot):
-    bot.add_cog(Aliases(bot))
+async def setup(bot):
+    await bot.add_cog(Aliases(bot))

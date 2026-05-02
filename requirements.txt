@@ -1,5 +1,6 @@
 # bot
-py-cord[speed]==2.7.1
+discord.py[speed]==2.7.1
+discord-py-paginators==0.3.0
 aiohttp==3.13.5
 # database
 SQLAlchemy[asyncio]==2.0.49

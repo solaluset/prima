@@ -36,5 +36,5 @@ async def invite(ctx):
     await em.send()
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_command(invite)

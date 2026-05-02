@@ -27,5 +27,5 @@ async def brainfuck(ctx, *, code: str):
             await ctx.send(t("exec.completed_without_output", ctx.language))
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_command(brainfuck)

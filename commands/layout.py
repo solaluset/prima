@@ -1,23 +1,25 @@
 import discord
 from discord.ext import commands
+from discord.app_commands import context_menu, locale_str
+
 from modules import embed
-from modules.i18n import t, generate_name_localizations
+from modules.i18n import t
 
 ENG = "`qwertyuiop[]\\asdfghjkl;'zxcvbnm,./@#$^&QWERTYUIOP{}|ASDFGHJKL:\"ZXCVBNM<>?"
 UKR = "'йцукенгшщзхїґфівапролджєячсмитьбю.\"№;:?ЙЦУКЕНГШЩЗХЇҐФІВАПРОЛДЖЄЯЧСМИТЬБЮ,"
 TR = str.maketrans(UKR + ENG, ENG + UKR)
 
 
-async def _text_from_message(message: discord.Message | discord.ForwardedMessage) -> str:
-    if message.content or isinstance(message, discord.ForwardedMessage):
+async def _text_from_message(message: discord.Message | discord.MessageSnapshot) -> str:
+    if message.content or isinstance(message, discord.MessageSnapshot):
         return message.content
 
     return await _text_from_referenced_message(message)
 
 
 async def _text_from_referenced_message(message: discord.Message) -> str:
-    if message.snapshots:
-        return await _text_from_message(message.snapshots[0].message)
+    if message.message_snapshots:
+        return await _text_from_message(message.message_snapshots[0])
 
     if ref := message.reference:
         try:
@@ -48,31 +50,24 @@ async def layout(ctx, *, text: str | None = None):
     await em.send()
 
 
-@commands.message_command(
-    name="layout",
-    name_localizations=generate_name_localizations("layout.title"),
-    integration_types={
-        discord.IntegrationType.guild_install,
-        discord.IntegrationType.user_install,
-    },
+@context_menu(
+    name=locale_str("layout.title"),
 )
 async def layout_message(ctx, message: discord.Message):
+    language = await ctx.client.get_language(ctx.guild)
     try:
         text = await _text_from_message(message)
     except discord.NotFound:
-        return await ctx.respond(
-            t("errors.not_found.message", ctx.language), ephemeral=True
-        )
+        return await ctx.respond(t("errors.not_found.message", language), ephemeral=True)
     if not text:
-        return await ctx.respond(t("layout.missing_text", ctx.language), ephemeral=True)
-    em = embed.Embed(
-        ctx,
-        title=t("layout.title", ctx.language),
+        return await ctx.respond(t("layout.missing_text", language), ephemeral=True)
+    em = discord.Embed(
+        title=t("layout.title", language),
         description=text.translate(TR),
     )
-    await em.send(ephemeral=True)
+    await ctx.response.send_message(embed=em, ephemeral=True)
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_command(layout)
-    bot.add_application_command(layout_message)
+    bot.tree.add_command(layout_message)

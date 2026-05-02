@@ -60,5 +60,5 @@ async def remove(ctx, *, prefix_arg: str):
     await ctx.send(t("prefix.remove.removed", ctx.language, prefix=prefix_arg))
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_command(prefix)

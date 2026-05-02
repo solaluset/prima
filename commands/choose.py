@@ -16,5 +16,5 @@ async def choose(ctx, *, variants: str):
     )
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_command(choose)

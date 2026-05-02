@@ -15,7 +15,7 @@ E_PATTERN = re.compile(rf"{FLOAT}e(\+|-)?\d+", re.I)
 @commands.command(usage="calc.usage")
 async def calc(ctx, *, expr: str):
     "calc.help"
-    await ctx.trigger_typing()
+    await ctx.typing()
     try:
         async with ctx.bot.session.get(ENDPOINT + quote(expr)) as req:
             res = await req.text()
@@ -28,5 +28,5 @@ async def calc(ctx, *, expr: str):
     await em.send()
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_command(calc)

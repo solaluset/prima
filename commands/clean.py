@@ -39,5 +39,5 @@ async def clean(ctx, amount: int, user: Member | None, *, reason: str | None = N
         await ctx.send(t("clean.messages_deleted", ctx.language, count=count))
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_command(clean)

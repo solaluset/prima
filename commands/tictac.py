@@ -182,5 +182,5 @@ class TicTac(commands.Cog):
         await self._update(message.channel.id, True)
 
 
-def setup(bot):
-    bot.add_cog(TicTac(bot))
+async def setup(bot):
+    await bot.add_cog(TicTac(bot))

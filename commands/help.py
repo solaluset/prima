@@ -1,11 +1,11 @@
 from typing import Mapping
 
-from discord.ext import commands, pages
+from discord.ext import commands
 from discord.ext.commands import Cog, Command, Group
 
 from modules import embed
 from modules.i18n import t
-from modules.utils import chunks
+from modules.utils import Paginator, chunks
 
 
 class Help(commands.DefaultHelpCommand):
@@ -17,6 +17,7 @@ class Help(commands.DefaultHelpCommand):
                 "usage": "help_command.usage",
                 "checks": [commands.bot_has_permissions(embed_links=True).predicate],
             },
+            show_parameter_descriptions=False,
         )
 
     def command_not_found(self, name: str) -> str:
@@ -48,9 +49,7 @@ class Help(commands.DefaultHelpCommand):
                     inline=False,
                 )
             help_pages.append(em)
-        await pages.Paginator(pages=help_pages).send(
-            self.context, self.get_destination()
-        )
+        await Paginator(pages=help_pages).send(self.context, self.get_destination())
 
     async def send_group_help(self, group: Group):
         em = self.get_command_embed(group)
@@ -110,5 +109,5 @@ class Help(commands.DefaultHelpCommand):
         return string[::-1].replace(old[::-1], new[::-1], count)[::-1]
 
 
-def setup(bot):
+async def setup(bot):
     bot.help_command = Help()

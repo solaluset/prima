@@ -4,9 +4,8 @@ from textwrap import TextWrapper
 import discord
 from discord import Activity, ActivityType, Status
 from discord.ext import commands
-from discord.ext.pages import Paginator
 
-from modules.utils import execute
+from modules.utils import Paginator, execute
 from modules.i18n import t
 
 
@@ -132,5 +131,5 @@ class DeveloperUtils(commands.Cog):
         await ctx.send(t("status.changed", ctx.language))
 
 
-def setup(bot):
-    bot.add_cog(DeveloperUtils())
+async def setup(bot):
+    await bot.add_cog(DeveloperUtils())

@@ -84,7 +84,7 @@ async def banner(ctx, *, user: SmartUserConverter = None):
     )
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_command(user)
     bot.add_command(avatar)
     bot.add_command(banner)

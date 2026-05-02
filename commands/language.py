@@ -1,5 +1,5 @@
 from discord.ext import commands
-from modules.i18n import AVAILABLE_LANGUAGES, t
+from modules.i18n import LOCALES, t
 
 
 @commands.command(usage="language.usage")
@@ -10,12 +10,12 @@ async def language(ctx, lang: str | None = None):
     if not lang:
         return await ctx.send(t("language.current", ctx.language))
     lang = lang.lower()
-    if lang not in AVAILABLE_LANGUAGES:
+    if lang not in LOCALES:
         return await ctx.send(
             t(
                 "language.unavailable",
                 ctx.language,
-                languages=", ".join(AVAILABLE_LANGUAGES),
+                languages=", ".join(LOCALES),
             )
         )
     await ctx.bot.guilds_data.upsert(
@@ -26,5 +26,5 @@ async def language(ctx, lang: str | None = None):
     await ctx.send(t("language.switched", lang))
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_command(language)

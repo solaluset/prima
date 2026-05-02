@@ -29,6 +29,6 @@ async def get_emoji(ctx, emoji: str):
     await ctx.send(t("errors.not_found.emoji", ctx.language))
 
 
-def setup(bot):
+async def setup(bot):
     bot.add_command(emoji)
     bot.add_command(get_emoji)

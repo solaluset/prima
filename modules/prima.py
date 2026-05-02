@@ -1,6 +1,7 @@
 import os
 import ast
 import json
+import asyncio
 import logging as log
 from pydoc import render_doc
 from typing import Iterable
@@ -21,7 +22,7 @@ from sqlalchemy.ext.asyncio import create_async_engine
 
 from . import regexps
 from .db import WrappedTable, metadata
-from .i18n import t
+from .i18n import Translator, t
 from .converters import RoleTooHighForUser, RoleTooHighForBot, NotSameGuild
 
 CONFIG_FILE = "config.json"
@@ -110,6 +111,7 @@ class PrimaBot(commands.Bot):
         if self.test_mode:
             log.info("Running in test mode.")
         self.load_config()
+        self._extensions = []
 
         self.test_channel_id = self.config["test_channel_id"]
         self.sql = (
@@ -223,16 +225,32 @@ class PrimaBot(commands.Bot):
             return super().run(token)
         log.fatal("Please enter the token in %s", CONFIG_FILE)
 
-    async def start(self, token):
+    async def setup_hook(self):
+        await super().setup_hook()
+
         self.session = aiohttp.ClientSession()
+
+        count = len(
+            await asyncio.gather(
+                *(
+                    self.load_extension("." + name, package=package)
+                    for name, package in self._extensions
+                )
+            )
+        )
+        log.info(f"{count} extensions loaded.")
 
         async with self.sql.begin() as conn:
             await conn.run_sync(metadata.create_all)
 
+        await self.tree.set_translator(Translator())
+        await self.tree.sync()
+
+    async def start(self, token, **kwargs):
         if self.test_mode:
             start_console(self)
 
-        await super().start(token)
+        await super().start(token, **kwargs)
 
     async def close(self):
         await self.session.close()
@@ -302,14 +320,8 @@ class PrimaBot(commands.Bot):
         with open(CONFIG_FILE, "w") as f:
             json.dump(self.config, f, indent=4)
 
-    def load_extensions(self, *names: str, package: str):
-        "Loads extensions from package."
-        count = len(
-            super().load_extensions(
-                *["." + i for i in names], package=package, store=False
-            )
-        )
-        log.info(f"{count} extensions loaded.")
+    def add_extensions(self, *names: str, package: str):
+        self._extensions.extend((name, package) for name in names)
 
 
 class PrimaContext(commands.Context):
