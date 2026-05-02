@@ -75,6 +75,6 @@ class Paginator(ButtonPaginator):
     def page_string(self) -> str:
         return f"{self.current_page + 1} / {self.max_pages}"
 
-    async def send(self, context):
+    async def send(self, context, dest=None):
         self.author_id = context.author.id
-        return await super().send(context)
+        return await super().send(dest or context)
