@@ -29,7 +29,8 @@ def init():
 
 
 def handle_missing_translation(key, locale, **_):
-    log.error(f"No translation for {key!r} ({locale})")
+    if key:
+        log.error(f"No translation for {key!r} ({locale})")
     return key
 
 
