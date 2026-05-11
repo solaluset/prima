@@ -7,6 +7,6 @@ SQLAlchemy[asyncio]==2.0.49
 asyncpg==0.31.0
 ring==0.10.1
 # aliases
-regex==2026.4.4
+regex==2026.5.9
 # translations
 i18nice[YAML]==0.16.0
