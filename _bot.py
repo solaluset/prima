@@ -42,6 +42,7 @@ bot.add_extensions(
     "convert",
     "developer",
     "emoji",
+    "etime",
     "help",
     "invite",
     "language",
