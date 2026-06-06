@@ -17,7 +17,7 @@ async def get_edit_time(inter, message: discord.Message):
         )
     else:
         await inter.response.send_message(
-            t("etime.edited", language, time=f"<t:{int(time.timestamp())}:F>"),
+            t("etime.edited", language, time=f"<t:{int(time.timestamp())}:f>"),
             ephemeral=True,
         )
 
