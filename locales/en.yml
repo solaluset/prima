@@ -210,6 +210,11 @@ emoji:
 get_emoji:
   help: "Sends emoji as file"
 
+etime:
+  title: "Show edit time"
+  edited: "Last edited %{time}"
+  not-edited: "The message was not edited."
+
 invite:
   help: >
     Sends invitation link
